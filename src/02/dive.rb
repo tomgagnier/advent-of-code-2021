@@ -35,5 +35,4 @@ def process(input_file)
   puts "#{input_file}: #{part_1(moves)}, #{part_2(moves)}"
 end
 
-process('test.txt')
-process('input.txt')
+%w(test.txt input.txt).each { |f| process(f) }
