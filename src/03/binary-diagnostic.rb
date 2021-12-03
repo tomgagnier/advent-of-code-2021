@@ -1,11 +1,18 @@
-def part_1(codes)
-  counts = codes.reduce(Hash.new { |h, k| h[k] = 0 }) do |counts, code|
+def counts_by_position(codes)
+  codes.reduce(Hash.new { |h, k| h[k] = 0 }) do |counts, code|
     code.split('').each_with_index { |c, i| counts[i] += 1 if c == '1' }
     counts
   end
-  code_length = codes[0].size
-  gamma = (0...code_length).reduce('') { |s, i| s + (2 * counts[i] > codes.size ? '1' : '0') }.to_i(2)
-  epsilon = (0...code_length).reduce('') { |s, i| s + (2 * counts[i] < codes.size ? '1' : '0') }.to_i(2)
+end
+
+def rate(codes, use_zero)
+  (0...codes[0].size).reduce('') { |s, i| s + (use_zero.call(i) ? '0' : '1') }.to_i(2)
+end
+
+def part_1(codes)
+  counts = counts_by_position(codes)
+  gamma = rate(codes, lambda { |i| 2 * counts[i] < codes.size })
+  epsilon = rate(codes, lambda { |i| 2 * counts[i] >= codes.size })
   gamma * epsilon
 end
 
