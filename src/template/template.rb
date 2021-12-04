@@ -1,3 +1,5 @@
+require_relative '../aoc.rb'
+
 def part_1(lines)
   'incomplete'
 end
@@ -15,4 +17,4 @@ end
 process('test.txt')
 
 #%w(test.txt input.txt).each { |f| process(f) }
-#
+
