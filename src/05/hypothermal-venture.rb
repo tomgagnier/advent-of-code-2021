@@ -11,21 +11,20 @@ def horizontal(x0, y0, x1, y1)
 end
 
 def diagonal(x0, y0, x1, y1)
-  (x1 - x0).abs == (y1- y0).abs ? range(x0, x1).zip(range(y0, y1)) : []
+  (x1 - x0).abs == (y1 - y0).abs ? range(x0, x1).zip(range(y0, y1)) : []
 end
 
 def count(lines)
-  lines.map{|l| yield(l) }.flatten(1)
-       .reduce(Hash.new { |h, k| h[k] = 0 }) { |h, p| h[p] += 1; h }
+  lines.map { |l| yield(l) }.flatten(1).reduce(Hash.new { |h, k| h[k] = 0 }) { |h, p| h[p] += 1; h }
     .values.filter { |n| n > 1 }.count
 end
 
 def part_1(lines)
-  count(lines) {|l| vertical(*l) + horizontal(*l)}
+  count(lines) { |l| vertical(*l) + horizontal(*l) }
 end
 
 def part_2(lines)
-  count(lines) {|l| vertical(*l) + horizontal(*l) + diagonal(*l)}
+  count(lines) { |l| vertical(*l) + horizontal(*l) + diagonal(*l) }
 end
 
 def process(input_file)
