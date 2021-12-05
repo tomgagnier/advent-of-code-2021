@@ -22,6 +22,15 @@ def group_lines_by_paragraphs(file_path)
   paragraphs
 end
 
+def paragraphs_in(file_path)
+  File.readlines(input_file)
+      .map { |l| l.strip.split(/[ ,]+/).map(&:to_i) }
+      .chunk { |line| line.empty? }
+      .filter { |b, _| !b }.map { |_, a| a }
+      .to_a
+
+end
+
 # Strings ##############################################################
 
 def to_symbol(string)
