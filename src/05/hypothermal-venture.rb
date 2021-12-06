@@ -14,17 +14,18 @@ def diagonal(x0, y0, x1, y1)
   (x1 - x0).abs == (y1 - y0).abs ? range(x0, x1).zip(range(y0, y1)) : []
 end
 
-def count(lines)
-  lines.map { |l| yield(l) }.flatten(1).reduce(Hash.new { |h, k| h[k] = 0 }) { |h, p| h[p] += 1; h }
-    .values.filter { |n| n > 1 }.count
+def count(lines, *methods)
+  lines.map { |l| methods.map { |method| send(method, *l) } }.flatten(2)
+       .reduce(Hash.new { |h, k| h[k] = 0 }) { |counts, point| counts[point] += 1; counts }
+    .values.filter { |count| count > 1 }.count
 end
 
 def part_1(lines)
-  count(lines) { |l| vertical(*l) + horizontal(*l) }
+  count(lines, :vertical, :horizontal)
 end
 
 def part_2(lines)
-  count(lines) { |l| vertical(*l) + horizontal(*l) + diagonal(*l) }
+  count(lines, :vertical, :horizontal, :diagonal)
 end
 
 def process(input_file)
