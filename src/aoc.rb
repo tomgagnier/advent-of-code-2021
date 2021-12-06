@@ -9,26 +9,11 @@ def read_lines(file_path)
   File.readlines(file_path).map(&:strip).reject(&:empty?)
 end
 
-def read_integers(file_path)
-  File.readlines(file_path).map(&:strip).reject(&:empty?).map(&:to_i)
-end
-
-def group_lines_by_paragraphs(file_path)
-  paragraphs = File.readlines(file_path).map(&:strip).reduce([[]]) do |paragraphs, line|
-    line.empty? ? paragraphs << [] : paragraphs[-1] << line
-    paragraphs
-  end
-  paragraphs.pop if paragraphs[-1].empty?
-  paragraphs
-end
-
-def paragraphs_in(file_path)
-  File.readlines(input_file)
-      .map { |l| l.strip.split(/[ ,]+/).map(&:to_i) }
+def read_paragraphs(file_path)
+  File.readlines(file_path).map(&:strip)
       .chunk { |line| line.empty? }
       .filter { |b, _| !b }.map { |_, a| a }
       .to_a
-
 end
 
 # Strings ##############################################################
@@ -46,8 +31,7 @@ end
 # Binary ###############################################################
 
 # Translate a string representation of a bitfield to an integer
-def
-binary_code_to_i(code:, zero_char: '0')
+def binary_code_to_i(code:, zero_char: '0')
   code.each_char.map { |c| c == zero_char ? 0 : 1 }.join.to_i(2)
 end
 
