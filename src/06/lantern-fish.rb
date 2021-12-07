@@ -1,5 +1,7 @@
 def census(input, day)
-  counts = File.readlines(input).map(&:strip).reject(&:empty?).map { |l| l.split(/,/).map(&:to_i) }.flatten
+  counts = File.readlines(input).map(&:strip).reject(&:empty?)
+               .map { |l| l.split(/,/).map(&:to_i) }
+               .flatten
                .reduce(Hash.new { |h, k| h[k] = 0 }) { |counts, time| counts[time] += 1; counts }
   day.times do
     births = counts[0]

@@ -5,12 +5,12 @@ require 'set'
 
 # IO ##################################################################
 
-def read_lines(file_path)
-  File.readlines(file_path).map(&:strip).reject(&:empty?)
+def read_lines(input)
+  File.readlines(input).map(&:strip).reject(&:empty?)
 end
 
-def read_paragraphs(file_path)
-  File.readlines(file_path).map(&:strip)
+def read_paragraphs(input)
+  File.readlines(input).map(&:strip)
       .chunk { |line| line.empty? }
       .filter { |b, _| !b }.map { |_, a| a }
       .to_a

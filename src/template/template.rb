@@ -1,15 +1,16 @@
 def part_1(lines)
-  'incomplete'
+  lines
 end
 
 def part_2(lines)
   'incomplete'
 end
 
-def process(input_file)
-  lines = File.readlines(input_file).map(&:strip).reject(&:empty?)
+def process(input)
+  lines = File.readlines(input).map(&:strip).reject(&:empty?)
+  paragraphs = File.readlines(input).map(&:strip).chunk { |l| l.empty? }.filter { |b, _| !b }.map { |_, a| a }.to_a
 
-  puts "#{input_file}: \n\t1) #{part_1(lines)} \n\t2) #{part_2(lines)}"
+  puts "#{input}: \n\t1) #{part_1(lines)} \n\t2) #{part_2(lines)}"
 end
 
 process('test.txt')
