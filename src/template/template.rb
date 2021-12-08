@@ -8,6 +8,8 @@ end
 
 def process(input)
   lines = File.readlines(input).map(&:strip).reject(&:empty?)
+  words = lines.map(&:split).flatten
+  integers = lines.map { |l| l.split(',').map(&:to_i) }.flatten
   paragraphs = File.readlines(input).map(&:strip).chunk { |l| l.empty? }.filter { |b, _| !b }.map { |_, a| a }.to_a
 
   puts "#{input}: \n\t1) #{part_1(lines)} \n\t2) #{part_2(lines)}"
