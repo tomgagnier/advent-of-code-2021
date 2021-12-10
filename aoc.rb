@@ -16,6 +16,10 @@ def read_paragraphs(input)
       .to_a
 end
 
+def read_2d_matrix(input)
+  File.readlines(input).map(&:strip).reject(&:empty?).map(&:chars).transpose
+end
+
 # Strings ##############################################################
 
 def to_symbol(string)
@@ -30,7 +34,7 @@ end
 
 # Binary ###############################################################
 
-# Translate a string representation of a bitfield to an integer
+# Translate neighborhood string representation of neighborhood bitfield to an integer
 def binary_code_to_i(code:, zero_char: '0')
   code.each_char.map { |c| c == zero_char ? 0 : 1 }.join.to_i(2)
 end
@@ -75,15 +79,13 @@ end
 # @param point the center of the neighborhood
 # @return the neighborhood of the point (any dimension), including the point itself
 def neighborhood_of(point)
-  dimension = point.size
-  neighborhood_range = 0...3 ** dimension
-  neighborhood_range
-    .map { |i|
-      (0...dimension).reduce([i]) { |a, i|
-        quotient = a[-1] / 3
-        a[-1] = a[-1] % 3 + point[i] - 1
-        a << quotient unless a.size == dimension
-        a
-      }
+  neighborhood_indexes = 0...3 ** point.size
+  (neighborhood_indexes).map { |index|
+    (0...point.size).reduce([index]) { |neighborhood, n|
+      quotient = neighborhood[-1] / 3
+      neighborhood[-1] = neighborhood[-1] % 3 + point[n] - 1
+      neighborhood << quotient unless neighborhood.size == point.size
+      neighborhood
     }
+  }
 end
