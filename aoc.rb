@@ -79,8 +79,8 @@ end
 # @param point the center of the neighborhood
 # @return the neighborhood of the point (any dimension), including the point itself
 def neighborhood_of(point)
-  neighborhood_indexes = 0...3 ** point.size
-  (neighborhood_indexes).map { |index|
+  neighborhood_size = 3 ** point.size
+  (0...neighborhood_size).map { |index|
     (0...point.size).reduce([index]) { |neighborhood, n|
       quotient = neighborhood[-1] / 3
       neighborhood[-1] = neighborhood[-1] % 3 + point[n] - 1
@@ -89,3 +89,27 @@ def neighborhood_of(point)
     }
   }
 end
+
+p neighborhood_of([1, 1, 1])
+puts neighborhood_of([0, 0, 0]).count
+puts neighborhood_of([0, 0, 0]).uniq.count
+
+def paths(connections, is_ended, is_valid, candidates, paths)
+  return paths if candidates.empty?
+  ended, candidates = candidates.partition { |path| is_ended.call(path) }
+  paths(connections, is_ended, is_valid,
+        candidates.select { |path| is_valid.call(path) }
+                  .map { |path| connections[path[-1]].map { |node| path + [node] } }
+                  .flatten(1),
+        paths + ended)
+end
+
+# @connections list of each node and its directed connections
+# @is_ended    lambda predicate of path, selecting paths for result
+# @is_valid    lambda predicate of path, selecting paths for next iteration
+# @start       starting node
+# @return      array of node arrays representing paths
+def walk(connections, is_ended, is_valid, start)
+  paths(connections, is_ended, is_valid, [[start]], [])
+end
+
