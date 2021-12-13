@@ -1,33 +1,22 @@
-def fold(dots, axis, value)
-  if axis == :x
-    dots.map { |d| d[0] < value ? d : [2 * value - d[0], d[1]] }
-  else
-    dots.map { |d| d[1] < value ? d : [d[0], 2 * value - d[1]] }
-  end.uniq
+def part_1(lines)
+  lines
 end
 
-def fold_all(dots, folds)
-  return dots if folds.empty?
-  dots = fold(dots, *folds.shift)
-  fold_all(dots, folds)
-end
-
-def to_lines(dots)
-  i_max = dots.map { |x, _| x }.max
-  j_max = dots.map { |_, y| y }.max
-  0.upto(j_max).map { |j| 0.upto(i_max).map { |i| dots.include?([i, j]) ? '#' : '.' }.join }
+def part_2(lines)
+  'incomplete'
 end
 
 def process(input)
-  dots, folds = File.readlines(input).map(&:strip).chunk { |l| l.empty? }.filter { |b, _| !b }.map { |_, a| a }.to_a
-  dots.map! { |dot| dot.split(',').map(&:to_i) }
+  lines = File.readlines(input).map(&:strip).reject(&:empty?)
+  words = lines.map(&:split).flatten
+  integers = lines.map { |l| l.split(',').map(&:to_i) }.flatten
+  regex = /...(?<name_1>pattern_1).../
+  matches = lines.map{|l| regex.match(l)}.map{|m| m[:pattern_1]}
+  paragraphs = File.readlines(input).map(&:strip).chunk { |l| l.empty? }.filter { |b, _| !b }.map { |_, a| a }.to_a
 
-  folds.map! { |f| /fold along (?<axis>[xy])=(?<value>\d+)/.match(f) }
-       .map! { |m| [m[:axis].to_sym, m[:value].to_i] }
-
-  puts input
-  puts "1) #{fold(dots, *folds[0]).count}"
-  puts "2)", to_lines(fold_all(dots, folds))
+  puts "#{input}: \n\t1) #{part_1(lines)} \n\t2) #{part_2(lines)}"
 end
 
-%w(test.txt input.txt).each { |f| process(f) }
+process('test.txt')
+
+#%w(test.txt input.txt).each { |f| process(f) }
