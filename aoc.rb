@@ -81,10 +81,12 @@ end
 def neighborhood_of(point)
   neighborhood_size = 3 ** point.size
   (0...neighborhood_size).map { |index|
-    (0...point.size).reduce([index]) { |neighborhood, n|
-      quotient = neighborhood[-1] / 3
-      neighborhood[-1] = neighborhood[-1] % 3 + point[n] - 1
-      neighborhood << quotient unless neighborhood.size == point.size
+    (0...point.size).reduce([]) { |neighborhood, n|
+      div3 = index / 3
+      mod3 = n % 3
+      neighborhood << point[n] + mod3 - 1
+      neighborhood[-1] = mod3 + point[n] - 1
+      neighborhood << div3 unless neighborhood.size == point.size
       neighborhood
     }
   }
