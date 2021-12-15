@@ -2,28 +2,29 @@ def bottomless_hash(v = 0)
   Hash.new { |h, k| h[k] = 0 }
 end
 
-def next_step(rules, pairs, char_counts, pair_counts)
+def next_step(rules, char_counts, pair_counts, steps)
+  return char_counts if steps == 0
   new_pair_counts = bottomless_hash
   pair_counts.each do |pair, count|
     char = rules[pair]
     char_counts[char] += count
-    pairs[pair].each { |p| new_pair_counts[p] += count }
+    new_pair_counts[pair[0] + char] += count
+    new_pair_counts[char + pair[1]] += count
   end
-  new_pair_counts
+  next_step(rules, char_counts, new_pair_counts, steps - 1)
 end
 
 def process(count, input)
-  polymer, rules = File.readlines(input).map(&:strip).chunk { |l| l.empty? }.filter { |b, _| !b }.map { |_, a| a }.to_a
+  polymer, rules = File.readlines(input).map(&:strip).chunk { |l| l.empty? }.filter { |b, _| !b }.map { |_, a| a }
 
-  polymer = polymer.join
-  rules = rules.map { |l| l.split(' -> ') }
-  pairs = rules.map { |i, o| [i, [i[0] + o, o + i[1]]] }.to_h
-  rules = rules.to_h
+  polymer = polymer.join.chars
+  char_counts = polymer.reduce(bottomless_hash) { |h, c| h[c] += 1; h }
+  pair_counts = polymer[0..-2].zip(polymer[1..]).map(&:join).reduce(bottomless_hash) { |h, pair| h[pair] += 1; h }
 
-  char_counts = polymer.chars.reduce(bottomless_hash) { |h, c| h[c] += 1; h }
-  pair_counts = polymer.chars[0..-2].zip(polymer.chars[1..]).map(&:join)
-                       .reduce(bottomless_hash) { |h, pair| h[pair] += 1; h }
-  count.times { pair_counts = next_step(rules, pairs, char_counts, pair_counts) }
+  rules = rules.map { |l| l.split(' -> ') }.to_h
+
+  next_step(rules, char_counts, pair_counts, count)
+
   puts "#{input} #{count} #{char_counts.values.max - char_counts.values.min}"
 end
 
